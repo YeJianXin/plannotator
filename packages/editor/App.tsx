@@ -60,43 +60,6 @@ const PLAN_CONTENT = `# Implementation Plan: Real-time Collaboration
 ## Overview
 Add real-time collaboration features to the editor using **[WebSocket API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)** and *[operational transforms](https://en.wikipedia.org/wiki/Operational_transformation)*.
 
-### Architecture
-
-\`\`\`mermaid
-flowchart LR
-    subgraph Client["Client Browser"]
-        UI[React UI] --> OT[OT Engine]
-        OT <--> WS[WebSocket Client]
-    end
-
-    subgraph Server["Backend"]
-        WSS[WebSocket Server] <--> OTS[OT Transform]
-        OTS <--> DB[(PostgreSQL)]
-    end
-
-    WS <--> WSS
-\`\`\`
-
-### Service Dependencies (Graphviz)
-
-\`\`\`graphviz
-digraph CollaborationStack {
-  rankdir=LR;
-  node [shape=box, style="rounded"];
-
-  Browser [label="Client Browser"];
-  API [label="WebSocket API"];
-  OT [label="OT Engine"];
-  Redis [label="Presence Cache"];
-  Postgres [label="PostgreSQL"];
-
-  Browser -> API;
-  API -> OT;
-  OT -> Redis;
-  OT -> Postgres;
-}
-\`\`\`
-
 ## Phase 1: Infrastructure
 
 ### WebSocket Server
@@ -150,6 +113,43 @@ CREATE TABLE collaborators (
 );
 
 CREATE INDEX idx_collaborators_document ON collaborators(document_id);
+\`\`\`
+
+### Architecture
+
+\`\`\`mermaid
+flowchart LR
+    subgraph Client["Client Browser"]
+        UI[React UI] --> OT[OT Engine]
+        OT <--> WS[WebSocket Client]
+    end
+
+    subgraph Server["Backend"]
+        WSS[WebSocket Server] <--> OTS[OT Transform]
+        OTS <--> DB[(PostgreSQL)]
+    end
+
+    WS <--> WSS
+\`\`\`
+
+### Service Dependencies (Graphviz)
+
+\`\`\`graphviz
+digraph CollaborationStack {
+  rankdir=LR;
+  node [shape=box, style="rounded"];
+
+  Browser [label="Client Browser"];
+  API [label="WebSocket API"];
+  OT [label="OT Engine"];
+  Redis [label="Presence Cache"];
+  Postgres [label="PostgreSQL"];
+
+  Browser -> API;
+  API -> OT;
+  OT -> Redis;
+  OT -> Postgres;
+}
 \`\`\`
 
 ## Phase 2: Operational Transforms
