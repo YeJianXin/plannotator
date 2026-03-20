@@ -23,7 +23,7 @@
     "build:portal": "bun run --cwd apps/portal build",
     "build:marketing": "bun run --cwd apps/marketing build",
     "build:opencode": "bun run --cwd apps/opencode-plugin build",
-    "build:qoder": "bun run build:hook && bun run build:review && bun run --cwd apps/qoder-plugin build && bun run --cwd apps/qoder-ide-plugin build",
+    "build:qoder": "bun run build:review && bun run build:hook && bun run --cwd apps/qoder-plugin build && bun run --cwd apps/qoder-ide-plugin build",
     "build:review": "bun run --cwd apps/review build",
     "build:pi": "bun run build:review && bun run build:hook && bun run --cwd apps/pi-extension build",
     "build": "bun run build:hook && bun run build:opencode",
