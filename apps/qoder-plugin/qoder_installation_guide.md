@@ -22,7 +22,21 @@
 
 ## 安装方法
 
-### 方法一：从源码安装
+### 方法一：一键安装脚本（推荐）
+
+#### Qoder CLI 安装
+```bash
+# 下载并运行一键安装脚本
+curl -fsSL https://raw.githubusercontent.com/YeJianXin/plannotator/main/install_qoder_cli.sh | bash
+```
+
+#### Qoder IDE 安装
+```bash
+# 下载并运行一键安装脚本
+curl -fsSL https://raw.githubusercontent.com/YeJianXin/plannotator/main/install_qoder_ide.sh | bash
+```
+
+### 方法二：手动安装
 
 #### 1. 克隆仓库
 ```bash
@@ -40,26 +54,17 @@ bun install
 bun run build:qoder
 ```
 
-### Qoder CLI 安装
-
-#### 4. 添加到 Qoder CLI
+#### Qoder CLI 安装
 ```bash
 qodercli mcp add plannotator -- bun "$(pwd)/apps/qoder-plugin/dist/index.js"
 ```
 
-### Qoder IDE 安装
-
-#### 4. 安装 Qoder IDE 插件
+#### Qoder IDE 安装
 ```bash
 cd apps/qoder-ide-plugin
 npm install -g .
-```
 
-#### 5. 添加 Skill
-将 `plannotator` skill 从 `.agents/skills/plannotator/` 复制到 Qoder IDE 的 skills 目录：
-
-```bash
-# 查找 Qoder IDE skills 目录
+# 添加 Skill
 QODER_SKILLS_DIR="$HOME/.qoder/skills"
 mkdir -p "$QODER_SKILLS_DIR"
 cp -r "$(pwd)/../../.agents/skills/plannotator" "$QODER_SKILLS_DIR/"
