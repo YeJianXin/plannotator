@@ -13,11 +13,40 @@ echo "========================================"
 # 检查必要的依赖
 echo "检查系统依赖..."
 
-# 检查 Bun
+# 检查并安装 Bun
+BUN_PATH="$HOME/.bun/bin/bun"
 if ! command -v bun &> /dev/null; then
-    echo "错误: Bun 未安装"
-    echo "请先安装 Bun: https://bun.sh"
-    exit 1
+    if [[ -f "$BUN_PATH" ]]; then
+        echo "Bun 已安装但不在 PATH 中，正在添加..."
+        export PATH="$HOME/.bun/bin:$PATH"
+    else
+        echo "Bun 未安装，正在安装..."
+        if [[ "$(uname)" == "Darwin" ]]; then
+            # macOS
+            curl -fsSL https://bun.sh/install | bash
+        elif [[ "$(uname)" == "Linux" ]]; then
+            # Linux
+            curl -fsSL https://bun.sh/install | bash
+        elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+            # Windows
+            powershell -c "irm https://bun.sh/install.ps1 | iex"
+        else
+            echo "错误: 不支持的操作系统"
+            exit 1
+        fi
+        # 刷新环境变量
+        if [[ -f "$HOME/.bashrc" ]]; then
+            source "$HOME/.bashrc"
+        elif [[ -f "$HOME/.zshrc" ]]; then
+            source "$HOME/.zshrc"
+        fi
+        # 验证安装
+        if ! command -v bun &> /dev/null; then
+            echo "错误: Bun 安装失败"
+            echo "请手动安装 Bun: https://bun.sh"
+            exit 1
+        fi
+    fi
 fi
 
 # 检查 Git
