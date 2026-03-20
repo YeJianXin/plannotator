@@ -1,0 +1,46 @@
+{
+  "name": "@plannotator/qoder-ide",
+  "version": "0.14.2",
+  "description": "Plannotator plugin for Qoder IDE - interactive plan review with visual annotation",
+  "author": "backnotprop",
+  "license": "MIT OR Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/backnotprop/plannotator.git",
+    "directory": "apps/qoder-ide-plugin"
+  },
+  "homepage": "https://github.com/backnotprop/plannotator",
+  "bugs": {
+    "url": "https://github.com/backnotprop/plannotator/issues"
+  },
+  "keywords": [
+    "qoder",
+    "qoder-ide",
+    "plannotator",
+    "plan-review",
+    "code-review",
+    "ai-agent",
+    "coding-agent"
+  ],
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "commands",
+    "README.md",
+    "plannotator.html",
+    "review-editor.html"
+  ],
+  "scripts": {
+    "build": "cp ../hook/dist/index.html ./plannotator.html && cp ../review/dist/index.html ./review-editor.html",
+    "postinstall": "mkdir -p ${XDG_CONFIG_HOME:-$HOME/.config}/qoder/command && cp ./commands/*.md ${XDG_CONFIG_HOME:-$HOME/.config}/qoder/command/ 2>/dev/null || true",
+    "prepublishOnly": "bun run build"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@plannotator/server": "workspace:*",
+    "@plannotator/shared": "workspace:*"
+  },
+  "peerDependencies": {
+    "bun": ">=1.0.0"
+  }
+}

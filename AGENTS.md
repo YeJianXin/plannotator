@@ -18,6 +18,16 @@ plannotator/
 │   │   ├── index.ts              # Plugin entry with submit_plan tool + review/annotate event handlers
 │   │   ├── plannotator.html      # Built plan review app
 │   │   └── review-editor.html    # Built code review app
+│   ├── qoder-plugin/             # Qoder CLI MCP server
+│   │   ├── commands/             # Qoder commands (plannotator-review.md, plannotator-annotate.md)
+│   │   ├── index.ts              # MCP server with submit_plan, plannotator_review, plannotator_annotate tools
+│   │   ├── plannotator.html      # Built plan review app
+│   │   └── review-editor.html    # Built code review app
+│   ├── qoder-ide-plugin/         # Qoder IDE plugin
+│   │   ├── commands/             # Qoder IDE commands
+│   │   ├── index.js              # Plugin entry point
+│   │   ├── plannotator.html      # Built plan review app
+│   │   └── review-editor.html    # Built code review app
 │   ├── marketing/                # Marketing site, docs, and blog (plannotator.ai)
 │   │   └── astro.config.mjs      # Astro 5 static site with content collections
 │   ├── paste-service/            # Paste service for short URL sharing
@@ -347,7 +357,7 @@ Code blocks use bundled `highlight.js`. Language is extracted from fence (```rus
 ## Requirements
 
 - Bun runtime
-- Claude Code with plugin/hooks support, or OpenCode
+- Claude Code with plugin/hooks support, OpenCode, or Qoder CLI
 - Cross-platform: macOS (`open`), Linux (`xdg-open`), Windows (`start`)
 
 ## Development
@@ -369,6 +379,7 @@ bun run dev:vscode     # VS Code extension (watch mode)
 bun run build:hook       # Single-file HTML for hook server
 bun run build:review     # Code review editor
 bun run build:opencode   # OpenCode plugin (copies HTML from hook + review)
+bun run build:qoder      # Qoder CLI MCP server (copies HTML from hook + review)
 bun run build:portal     # Static build for share.plannotator.ai
 bun run build:marketing  # Static build for plannotator.ai
 bun run build:vscode     # VS Code extension bundle
@@ -392,4 +403,63 @@ Running only `build:opencode` will copy stale HTML files.
 
 ```
 claude --plugin-dir ./apps/hook
+```
+
+## Qoder CLI Integration
+
+Plannotator provides an MCP (Model Context Protocol) server for Qoder CLI, enabling plan review and code annotation capabilities.
+
+### Installation
+
+1. Build the plugin:
+```bash
+bun run build:qoder
+```
+
+2. Add to Qoder CLI:
+```bash
+qodercli mcp add plannotator -- bun /path/to/plannotator/apps/qoder-plugin/dist/index.js
+```
+
+Or add manually to `~/.qoder.json`:
+```json
+{
+  "mcpServers": {
+    "plannotator": {
+      "command": "bun",
+      "args": ["/path/to/plannotator/apps/qoder-plugin/dist/index.js"],
+      "type": "stdio"
+    }
+  }
+}
+```
+
+### MCP Tools
+
+| Tool | Description |
+|------|-------------|
+| `submit_plan` | Submit a plan for visual review (markdown text or file path) |
+| `plannotator_review` | Review uncommitted code changes with visual diff |
+| `plannotator_annotate` | Annotate a markdown file with comments |
+
+### Qoder Commands
+
+| Command | Description |
+|---------|-------------|
+| `/plannotator-review` | Open code review UI for uncommitted changes |
+| `/plannotator-annotate <file>` | Annotate a markdown file |
+| `/plannotator-last` | Annotate the last assistant message |
+
+### Usage in Qoder
+
+When the AI has a plan ready, it will call `submit_plan` to open the visual review UI. You can annotate, approve, or request changes.
+
+For code review:
+```
+/plannotator-review
+```
+
+For markdown annotation:
+```
+/plannotator-annotate docs/plan.md
 ```
